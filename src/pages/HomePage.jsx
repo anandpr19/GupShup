@@ -16,24 +16,10 @@ const HomePage = () => {
           : 'md:grid-cols-2 xl:grid-cols-[1fr_1.2fr]'
         }`}
       >
-        {/* Sidebar (Left) */}
-        <div
-          className={`${selectedUser ? 'max-md:hidden' : 'block'}`}
-        >
+
           <SideBar selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-        </div>
-
-        {/* Chat Container (Middle) */}
-        <div
-          className={`${!selectedUser ? 'max-md:hidden' : 'block'} border-l border-gray-700 border-r`}
-        >
           <ChatContainer selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-        </div>
-
-        {/* Right Sidebar (Info Panel) */}
-        <div className="max-lg:hidden">
-          <RightsideBar />
-        </div>
+          <RightsideBar selectedUser= {selectedUser} setSelectedUser={setSelectedUser} />
       </div>
     </div>
   )
