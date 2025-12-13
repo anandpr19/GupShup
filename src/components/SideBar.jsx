@@ -6,7 +6,7 @@ const SideBar = ({ selectedUser, setSelectedUser }) => {
   const navigate = useNavigate();
 
   return (
-    <div className={`bg-[#8185B2] h-full flex flex-col p-5 rounded-r-xl text-white ${selectedUser ? "max-md:hidden" : ""}`}>
+    <div className={`bg-gradient-to-b from-[#787CB4] to-[#5A5D8F] h-screen flex flex-col p-5 rounded-r-xl text-white ${selectedUser ? "max-md:hidden" : ""}`}>
       
       {/* Top Section */}
       <div className="pb-5 flex-shrink-0">
