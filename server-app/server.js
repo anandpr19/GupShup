@@ -13,7 +13,8 @@ const server = http.createServer(app)
 
 //Initialize socket.io server
 export const io = new Server(server,{
-    cors:{origin:"*"} //allowing cors for -> all [ "*" ]
+    cors:{origin:"*"}, //allowing cors for -> all [ "*" ]
+    credentials:true
 })
 
 //Store Online Users 
@@ -21,24 +22,29 @@ export const userSocketMap={}; //{userId, socketId}
 
 //Store Online users
 
-io.on("connection",(socket)=>{
-    const userId = socket.handshake.query.userId
-    console.log("User Connected",userId)
-    
-    if(userId) userSocketMap[userId]= socket.id
+io.use((socket, next) => {
+    console.log("Socket attempting to connect")
+    console.log("Namespace:", socket.nsp.name)
+    console.log("Handshake query:", socket.handshake.query)
+    next()
+})
 
-    //emit online users to all connected clients
+io.on("connection", (socket) => {
+    const userId = socket.handshake.query.userId
+    console.log("User Connected", userId)
+    if(userId) userSocketMap[userId] = socket.id
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap))
-    socket.on("disconnect",()=>{
-        console.log("User disconnected",userId)
+    
+    socket.on("disconnect", ()=>{
+        console.log("User disconnected", userId)
         delete userSocketMap[userId]
-        io.emit("getOnlineUsers",Object.keys(userSocketMap))
+        io.emit("getOnlineUsers", Object.keys(userSocketMap))
     })
 })
 
 //Middleware setup 
-app.use(express.json({limit:"4mv"}))
+app.use(express.json({limit:"4mb"}))
 app.use(cors())
 
 //Routes Setup
