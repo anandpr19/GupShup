@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [dataSubmitted, setDataSubmitted] = useState(false)
 
   const { login } =useContext(AuthContext)
-  
+
   const onSubmitHandler = (event)=>{
     event.preventDefault();
 
