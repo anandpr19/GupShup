@@ -4,11 +4,10 @@ import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import LoginPage from './pages/LoginPage'
 import { Toaster } from "react-hot-toast"
-import { useContext } from "react"
-import { AuthContext } from '../context/useAuth'
+import { useAuth } from '../context/useAuth'
 
 const App = () => {
-  const { authUser } = useContext(AuthContext) // because the checkAuth() is already updating the authUser state such that is this state is true, we know the user is already authenticated
+  const { authUser } = useAuth() // because the checkAuth() is already updating the authUser state such that is this state is true, we know the user is already authenticated
   return (
     <div className="bg-[url(./src/assets/bgImage.svg)] bg-contain">
       <Toaster />

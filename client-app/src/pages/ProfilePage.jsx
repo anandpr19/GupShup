@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import assets from '../assets/assets'
-import { useContext } from 'react'
-import { AuthContext } from "../../context/useAuth"
+import { useAuth } from "../../context/useAuth"
 const ProfilePage = () => {
 
-  const { authUser ,updateProfile} = useContext(AuthContext)
+  const { authUser, updateProfile } = useAuth()
 
   const [selectedImage, setselectedImage] = useState(null);
   const navigate = useNavigate();

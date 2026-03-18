@@ -6,20 +6,26 @@ import {io, userSocketMap} from "../server.js"
 //Get all users except the logged in user
 export const getUsersForSidebar = async (req, res) => {
     try {
-        const userId = req.user_id
-        const filteredUser = await User.find({ _id: { $ne: userId } }).select("-password") // $ne means not equals to here & .select for removing passwords from this data(security practice)
+        const userId = req.user._id
+        const filteredUser = await User.find({ _id: { $ne: userId } }).select("-password")
         const unseenMessages = {}
-        const promises = filteredUser.map(async (params) => {
-            const messages = await Message.find({ senderId: userId._id, recieverId: userId, seen: false }) // through this we will get the unseen messages
+
+        const promises = filteredUser.map(async (user) => {
+            const messages = await Message.find({
+                senderId: user._id,
+                recieverId: userId,
+                seen: false
+            })
             if (messages.length > 0) {
-                unseenMessages[user_id] = messages.length // the unseen messages object would store the count of messages which are unseen via the key as user._id
+                unseenMessages[user._id] = messages.length
             }
         })
-        await Promise.all(promises) // executing the promises
+
+        await Promise.all(promises)
         res.json({ success: true, users: filteredUser, unseenMessages })
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 
@@ -61,8 +67,8 @@ export const sendMessage = async (req, res) => {
     try {
         const { text, image } = req.body
         const recieverId = req.params.id
-        const senderId = req.user_id;
-        let imageUrl;
+        const senderId = req.user._id
+        let imageUrl
         if (image) {
             const uploadResponse = await cloudinary.uploader.upload(image)
             imageUrl = uploadResponse.secure_url

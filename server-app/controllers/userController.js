@@ -32,16 +32,20 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body
         const userData = await User.findOne({ email })
-        const ispassWordCorrect = bcrypt.compare(password, userData.password)
-        if (!ispassWordCorrect) {
-            res.json({ success: false, message: "Kripya Galtiyan Jaanch Lein" })
+        if (!userData) {
+            return res.json({ success: false, message: "Kripya Galtiyan Jaanch Lein" })
         }
-        const token = generateToken(newUser._id)
 
+        const ispassWordCorrect = await bcrypt.compare(password, userData.password)
+        if (!ispassWordCorrect) {
+            return res.json({ success: false, message: "Kripya Galtiyan Jaanch Lein" })
+        }
+
+        const token = generateToken(userData._id)
         res.json({ success: true, userData, token, message: "Swagat hai Aapka" })
     } catch (error) {
         console.log(error.message);
-        res.json({ success: false, message: error.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 

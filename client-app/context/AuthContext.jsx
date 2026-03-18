@@ -14,28 +14,28 @@ export const AuthProvider = ({ children }) => {
     const [socket, setSocket] = useState(null)
 
     const connectSocket = useCallback((userData) => {
-        if(!userData || (socket && socket.connected)) return 
-        console.log("Connected to: ",backendUrl);
-        
-        const newSocket = io(backendUrl,{
-            query:{
-                userId :userData._id
+        if (!userData || (socket && socket.connected)) return
+
+        const newSocket = io(backendUrl, {
+            autoConnect: true,
+            transports: ["websocket", "polling"],
+            query: {
+                userId: userData._id
             }
         })
 
-        newSocket.on("connect",()=>{
-            console.log("Socket connection Successful:",newSocket.id);
-            
-        })
-        newSocket.on("Error",(error)=>{
-            console.log("connection error:",error);
-            
+        newSocket.on("connect", () => {
+            console.log("Socket connected:", newSocket.id)
         })
 
-        newSocket.on("getOnlineUsers",(userIds)=>{
+        newSocket.on("connect_error", (error) => {
+            console.log("Socket connection error:", error)
+        })
+
+        newSocket.on("getOnlineUsers", (userIds) => {
             setOnlineUsers(userIds)
         })
-        newSocket.connect()
+
         setSocket(newSocket)
     }, [socket])
     

@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import assets from '../assets/assets'
-import { data } from 'react-router-dom'
-import { AuthContext } from '../../context/useAuth'
+import { useAuth } from '../../context/useAuth'
 
 const LoginPage = () => {
 
@@ -12,7 +11,7 @@ const LoginPage = () => {
   const [bio, setBio] = useState("")
   const [dataSubmitted, setDataSubmitted] = useState(false)
 
-  const { login } =useContext(AuthContext)
+  const { login } = useAuth()
 
   const onSubmitHandler = (event)=>{
     event.preventDefault();
